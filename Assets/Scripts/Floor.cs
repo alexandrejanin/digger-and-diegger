@@ -1,17 +1,20 @@
 using UnityEngine;
 
 public class Floor : MonoBehaviour {
-    [SerializeField, Min(0)] private float digDistance = 0.25f;
-    [SerializeField] private KeyCode[] inputCycle;
-    [SerializeField] private int inputIndex;
+    private Vector3 targetPosition;
 
-    private KeyCode NextInput => inputCycle[inputIndex];
+    public float Depth {
+        get => targetPosition.y;
+        set => targetPosition.y = value;
+    }
+
+    private void Awake() {
+        targetPosition = transform.position;
+    }
 
     private void Update() {
-        if (Input.GetKeyDown(NextInput)) {
-            transform.position += digDistance * Vector3.down;
-            inputIndex++;
-            inputIndex %= inputCycle.Length;
-        }
+        transform.position = Vector3.Lerp(transform.position, targetPosition, 0.1f);
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+            transform.position = targetPosition;
     }
 }
