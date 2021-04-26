@@ -34,6 +34,15 @@ public class Ceiling : MonoBehaviour {
 
     private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Player"))
-            FindObjectOfType<GameManager>().Lose();
+            manager.StartLose();
+
+        if (other.gameObject.CompareTag("Floor"))
+            manager.EndLose();
+    }
+
+    public void Fall() {
+        GetComponent<Rumble>().enabled = false;
+        var rb = gameObject.AddComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
     }
 }

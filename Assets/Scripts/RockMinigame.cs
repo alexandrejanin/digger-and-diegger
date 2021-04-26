@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RockMinigame : Minigame {
     [SerializeField] private GameObject rockPrefab;
@@ -47,11 +49,8 @@ public class RockMinigame : Minigame {
             manager.Players.SwingDigger();
             manager.Players.SwingDiggur();
 
-            if (hitsLeft <= 0) {
-                Destroy(rock);
-                manager.Players.onInput.RemoveListener(InputListener);
+            if (hitsLeft <= 0)
                 manager.EndMinigame(true);
-            }
         }
 
         if (DiggerButton == null && diggerCorrect <= 0)
@@ -78,5 +77,10 @@ public class RockMinigame : Minigame {
             } else
                 manager.Players.Stun(2);
         }
+    }
+
+    private void OnDestroy() {
+        Destroy(rock);
+        manager.Players.onInput.RemoveListener(InputListener);
     }
 }

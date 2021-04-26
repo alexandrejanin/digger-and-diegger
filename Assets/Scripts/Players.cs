@@ -79,4 +79,10 @@ public class Players : MonoBehaviour {
 
     public void SwingDigger() => diggerAnimator.Play("Swing");
     public void SwingDiggur() => diggurAnimator.Play("Swing");
+
+    public void Die() {
+        Stun(1000);
+        Destroy(GetComponent<Rigidbody>());
+        Destroy(GetComponent<BoxCollider>());
+    }
 }

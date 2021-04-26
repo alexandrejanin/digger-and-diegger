@@ -15,7 +15,7 @@ public class MainCamera : MonoBehaviour {
 
         var ceilingDistanceNormalized = Mathf.InverseLerp(manager.Ceiling.MaxDistance, manager.Ceiling.MinDistance, ceilingDistance);
 
-        var yOffset = manager.Minigame is MoleMinigame ? ceilingDistance / 2 : Mathf.Lerp(3, 1.5f, ceilingDistanceNormalized);
+        var yOffset = Mathf.Max(2, ceilingDistance / 2);
         var z = Mathf.Lerp(-30, -10, ceilingDistanceNormalized);
 
         var targetPos = new Vector3(0, manager.Players.transform.position.y + yOffset, z);

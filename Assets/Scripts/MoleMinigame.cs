@@ -90,10 +90,12 @@ public class MoleMinigame : Minigame {
 
         moles.RemoveAll(m => !m.Alive);
 
-        if (moles.Count == 0 && diggerIndex >= diggerDelays.Length && diggurIndex >= diggurDelays.Length) {
-            manager.Players.onInput.RemoveListener(InputListener);
-            Destroy(line);
+        if (moles.Count == 0 && diggerIndex >= diggerDelays.Length && diggurIndex >= diggurDelays.Length)
             manager.EndMinigame(true);
-        }
+    }
+
+    private void OnDestroy() {
+        Destroy(line);
+        manager.Players.onInput.RemoveListener(InputListener);
     }
 }

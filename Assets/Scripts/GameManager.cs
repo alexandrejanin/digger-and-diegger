@@ -87,7 +87,17 @@ public class GameManager : MonoBehaviour {
         pauseMenu.SetActive(false);
     }
 
-    public void Lose() {
+    public void StartLose() {
+        IsPlaying = false;
+        Ceiling.Fall();
+        Players.Die();
+    }
+
+    public void EndLose() {
+        Players.GetComponentInChildren<Light>().enabled = false;
+        if (Minigame)
+            Destroy(Minigame.gameObject);
+        Minigame = null;
         defeatMenu.SetActive(true);
     }
 
