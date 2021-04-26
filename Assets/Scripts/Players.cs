@@ -11,6 +11,7 @@ public class Players : MonoBehaviour {
     public ButtonType? DiggurButton => waitingForInput && !diggerNext ? ButtonType.Down : (ButtonType?) null;
 
     private float stunTimer;
+    public bool IsStunned => stunTimer > 0;
 
     private bool waitingForInput;
     private bool diggerNext = true;
@@ -33,10 +34,10 @@ public class Players : MonoBehaviour {
     private void Update() {
         stunTimer -= Time.deltaTime;
 
-        diggerAnimator.SetBool("Stunned", stunTimer > 0);
-        diggurAnimator.SetBool("Stunned", stunTimer > 0);
+        diggerAnimator.SetBool("Stunned", IsStunned);
+        diggurAnimator.SetBool("Stunned", IsStunned);
 
-        if (stunTimer > 0)
+        if (IsStunned)
             return;
 
         if (Input.GetButtonDown("DiggerUp")) onInput?.Invoke(true, ButtonType.Up);

@@ -12,7 +12,9 @@ public class ScoreText : MonoBehaviour {
     }
 
     private void Update() {
+        transform.parent.GetComponent<Image>().enabled = manager.IsPlaying;
+        text.enabled = manager.IsPlaying;
         if (manager.IsPlaying)
-            text.text = $"{manager.Floor.transform.position.y:F1}m";
+            text.text = $"{manager.Score}m";
     }
 }
