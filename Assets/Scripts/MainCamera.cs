@@ -1,24 +1,24 @@
 using UnityEngine;
 
 public class MainCamera : MonoBehaviour {
-    [SerializeField] private Players players;
-
     private GameManager manager;
-
-    private float yOffset;
 
     private void Awake() {
         manager = FindObjectOfType<GameManager>();
-        yOffset = transform.position.y - players.transform.position.y;
     }
 
     private void Update() {
+        if (!manager.Ceiling.isActiveAndEnabled || !manager.Players)
+            return;
+
         var ceilingDistance = manager.Ceiling.transform.position.y - manager.Players.transform.position.y;
 
-        var fovT = Mathf.InverseLerp(manager.Ceiling.MaxDistance, manager.Ceiling.MinDistance, ceilingDistance);
-        var z = 20 * fovT - 30;
+        var ceilingDistanceNormalized = Mathf.InverseLerp(manager.Ceiling.MaxDistance, manager.Ceiling.MinDistance, ceilingDistance);
 
-        var targetPos = new Vector3(0, players.transform.position.y + yOffset, z);
+        var yOffset = manager.Minigame is MoleMinigame ? ceilingDistance / 2 : Mathf.Lerp(3, 1.5f, ceilingDistanceNormalized);
+        var z = Mathf.Lerp(-30, -10, ceilingDistanceNormalized);
+
+        var targetPos = new Vector3(0, manager.Players.transform.position.y + yOffset, z);
 
         transform.position = Vector3.Lerp(transform.position, targetPos, 0.05f);
     }

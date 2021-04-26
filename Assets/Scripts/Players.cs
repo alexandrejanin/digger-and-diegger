@@ -2,24 +2,23 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class Players : MonoBehaviour {
+    [SerializeField] private Animator diggerAnimator, diggurAnimator;
     [SerializeField, Min(0)] private float digDistance = 0.5f;
 
     public UnityEvent<bool, ButtonType> onInput;
 
     public ButtonType? DiggerButton => waitingForInput && diggerNext ? ButtonType.Down : (ButtonType?) null;
-    public ButtonType? DieggerButton => waitingForInput && !diggerNext ? ButtonType.Down : (ButtonType?) null;
+    public ButtonType? DiggurButton => waitingForInput && !diggerNext ? ButtonType.Down : (ButtonType?) null;
 
-    private PlayerStun[] stuns;
     private float stunTimer;
 
     private bool waitingForInput;
-    private bool diggerNext;
+    private bool diggerNext = true;
 
     private GameManager manager;
 
     private void Awake() {
         manager = FindObjectOfType<GameManager>();
-        stuns = GetComponentsInChildren<PlayerStun>();
 
         onInput.AddListener((isDigger, button) => {
             if (!manager.InDigPhase || !waitingForInput) return;
@@ -27,14 +26,15 @@ public class Players : MonoBehaviour {
             if (isDigger == diggerNext && button == ButtonType.Down)
                 DigDown();
             else
-                Stun();
+                Stun(2);
         });
     }
 
     private void Update() {
         stunTimer -= Time.deltaTime;
-        foreach (var stun in stuns)
-            stun.active = stunTimer > 0;
+
+        diggerAnimator.SetBool("Stunned", stunTimer > 0);
+        diggurAnimator.SetBool("Stunned", stunTimer > 0);
 
         if (stunTimer > 0)
             return;
@@ -44,24 +44,38 @@ public class Players : MonoBehaviour {
         if (Input.GetButtonDown("DiggerLeft")) onInput?.Invoke(true, ButtonType.Left);
         if (Input.GetButtonDown("DiggerRight")) onInput?.Invoke(true, ButtonType.Right);
 
-        if (Input.GetButtonDown("DieggerUp")) onInput?.Invoke(false, ButtonType.Up);
-        if (Input.GetButtonDown("DieggerDown")) onInput?.Invoke(false, ButtonType.Down);
-        if (Input.GetButtonDown("DieggerLeft")) onInput?.Invoke(false, ButtonType.Left);
-        if (Input.GetButtonDown("DieggerRight")) onInput?.Invoke(false, ButtonType.Right);
+        if (Input.GetButtonDown("DiggurUp")) onInput?.Invoke(false, ButtonType.Up);
+        if (Input.GetButtonDown("DiggurDown")) onInput?.Invoke(false, ButtonType.Down);
+        if (Input.GetButtonDown("DiggurLeft")) onInput?.Invoke(false, ButtonType.Left);
+        if (Input.GetButtonDown("DiggurRight")) onInput?.Invoke(false, ButtonType.Right);
     }
 
     private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Floor"))
+        if (other.gameObject.CompareTag("Floor")) {
             waitingForInput = true;
+            if (!manager.IsPlaying)
+                manager.PlayersLanded();
+        }
     }
 
     private void DigDown() {
+        if (diggerNext)
+            SwingDigger();
+        else
+            SwingDiggur();
+
         manager.Floor.Depth -= digDistance;
         diggerNext = !diggerNext;
-        waitingForInput = false;
+        // waitingForInput = false;
     }
 
     public void Stun(float duration = 1f) {
         stunTimer = duration;
+        diggerAnimator.SetBool("Stunned", true);
+        diggerAnimator.Play("Stunned");
+        diggurAnimator.Play("Stunned");
     }
+
+    public void SwingDigger() => diggerAnimator.Play("Swing");
+    public void SwingDiggur() => diggurAnimator.Play("Swing");
 }

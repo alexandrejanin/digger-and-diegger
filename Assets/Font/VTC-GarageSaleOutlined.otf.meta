@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 1d8c9148c06c87442a37cf05a657cb03
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - VTCGarageSale
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 52f03a029a8052a4a952d083c0d4e268, type: 3}
+  - {fileID: 12800000, guid: 29b028064ce7fae41aa8acd97e8457be, type: 3}
+  - {fileID: 12800000, guid: e68ad3e3d76da8c4593d72b787d41424, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

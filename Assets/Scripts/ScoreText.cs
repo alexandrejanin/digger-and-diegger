@@ -12,6 +12,7 @@ public class ScoreText : MonoBehaviour {
     }
 
     private void Update() {
-        text.text = $"{manager.Floor.transform.position.y:F1}m";
+        if (manager.IsPlaying)
+            text.text = $"{manager.Floor.transform.position.y:F1}m";
     }
 }

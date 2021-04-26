@@ -2,10 +2,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] public InputText diggerInputText, dieggerInputText;
-    [SerializeField] private GameObject pauseMenu, defeatMenu;
+    [SerializeField] public Players playersPrefab;
+    [SerializeField] public InputText diggerInputText, diggurInputText;
+    [SerializeField] private GameObject mainMenu, pauseMenu, defeatMenu;
     [SerializeField, Min(0)] private float minMinigameDelay = 3, maxMinigameDelay = 10;
-    [SerializeField] private RockMinigame[] minigames;
+    [SerializeField] private Minigame[] minigames;
 
     private float minigameDelay;
 
@@ -13,15 +14,16 @@ public class GameManager : MonoBehaviour {
     public Floor Floor { get; private set; }
     public Ceiling Ceiling { get; private set; }
 
-    private RockMinigame minigame;
-    public bool InMinigame => minigame != null;
+    public Minigame Minigame { get; private set; }
+    public bool InMinigame => IsPlaying && Minigame != null;
 
-    public bool InDigPhase => minigame == null;
+    public bool InDigPhase => IsPlaying && Minigame == null;
+
+    public bool IsPlaying { get; private set; }
 
     private void Awake() {
-        Players = FindObjectOfType<Players>();
-        Floor = FindObjectOfType<Floor>();
-        Ceiling = FindObjectOfType<Ceiling>();
+        Floor = FindObjectOfType<Floor>(true);
+        Ceiling = FindObjectOfType<Ceiling>(true);
         minigameDelay = Random.Range(3f, 6f);
     }
 
@@ -29,31 +31,53 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape))
             Pause();
 
+        if (!IsPlaying)
+            return;
+
         minigameDelay -= Time.deltaTime;
         if (InDigPhase && minigameDelay < 0)
             SpawnMinigame();
 
-        if (minigame != null) {
-            diggerInputText.Prompt(true, minigame.DiggerButton);
-            dieggerInputText.Prompt(false, minigame.DieggerButton);
+        if (Minigame != null) {
+            diggerInputText.Prompt(Minigame.DiggerButton);
+            diggurInputText.Prompt(Minigame.DiggurButton);
         } else {
-            diggerInputText.Prompt(true, Players.DiggerButton);
-            dieggerInputText.Prompt(false, Players.DieggerButton);
+            diggerInputText.Prompt(Players.DiggerButton);
+            diggurInputText.Prompt(Players.DiggurButton);
         }
     }
 
     private void SpawnMinigame() {
-        minigame = Instantiate(minigames[Random.Range(0, minigames.Length)]);
+        Minigame = Instantiate(minigames[Random.Range(0, minigames.Length)]);
     }
 
     public void EndMinigame(bool won) {
-        Destroy(minigame.gameObject);
-        minigame = null;
-        minigameDelay = Random.Range(minMinigameDelay, maxMinigameDelay);
+        Destroy(Minigame.gameObject);
+        Minigame = null;
+        if (won)
+            minigameDelay = Random.Range(minMinigameDelay, maxMinigameDelay);
+        else
+            minigameDelay = 1000;
+    }
+
+    public void Play() {
+        Players = Instantiate(playersPrefab, new Vector3(0, 15, 0), Quaternion.identity);
+        diggerInputText.target = Players.transform.Find("Digger").gameObject;
+        diggurInputText.target = Players.transform.Find("Diggur").gameObject;
+        mainMenu.SetActive(false);
+    }
+
+    public void PlayersLanded() {
+        Ceiling.gameObject.SetActive(true);
+        IsPlaying = true;
     }
 
     public void Pause() {
-        pauseMenu.SetActive(true);
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+    }
+
+    public void Resume() {
+        pauseMenu.SetActive(false);
     }
 
     public void Lose() {
