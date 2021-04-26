@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class Players : MonoBehaviour {
     [SerializeField] private Animator diggerAnimator, diggurAnimator;
     [SerializeField, Min(0)] private float digDistance = 0.5f;
+    [SerializeField] private AudioClip[] digClips, stunClips;
 
     public UnityEvent<bool, ButtonType> onInput;
 
@@ -17,8 +18,10 @@ public class Players : MonoBehaviour {
     private bool diggerNext = true;
 
     private GameManager manager;
+    private AudioSource audioSource;
 
     private void Awake() {
+        audioSource = GetComponent<AudioSource>();
         manager = FindObjectOfType<GameManager>();
 
         onInput.AddListener((isDigger, button) => {
@@ -67,7 +70,9 @@ public class Players : MonoBehaviour {
 
         manager.Floor.Depth -= digDistance;
         diggerNext = !diggerNext;
-        // waitingForInput = false;
+
+        audioSource.clip = digClips[Random.Range(0, digClips.Length)];
+        audioSource.Play();
     }
 
     public void Stun(float duration = 1f) {
@@ -75,13 +80,17 @@ public class Players : MonoBehaviour {
         diggerAnimator.SetBool("Stunned", true);
         diggerAnimator.Play("Stunned");
         diggurAnimator.Play("Stunned");
+
+        audioSource.clip = stunClips[Random.Range(0, stunClips.Length)];
+        audioSource.Play();
     }
 
     public void SwingDigger() => diggerAnimator.Play("Swing");
     public void SwingDiggur() => diggurAnimator.Play("Swing");
 
     public void Die() {
-        Stun(1000);
+        stunTimer = 1000;
+
         Destroy(GetComponent<Rigidbody>());
         Destroy(GetComponent<BoxCollider>());
     }

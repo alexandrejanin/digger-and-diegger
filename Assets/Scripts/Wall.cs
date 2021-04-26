@@ -14,11 +14,13 @@ public class Wall : MonoBehaviour {
 
         var meshIndex = Random.Range(0, meshes.Length);
         meshFilter.mesh = meshes[meshIndex];
-        if (meshIndex == 0)
-            return;
 
         var mats = meshRenderer.materials;
-        mats[2] = materials[Random.Range(0, materials.Length)];
-        meshRenderer.materials = mats;
+        if (meshIndex == 0)
+            meshRenderer.materials = new[] {mats[0], mats[1]};
+        else {
+            mats[2] = materials[Random.Range(0, materials.Length)];
+            meshRenderer.materials = mats;
+        }
     }
 }

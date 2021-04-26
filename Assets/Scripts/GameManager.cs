@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private AudioClip music, musicLoop;
+    [SerializeField] private AudioClip music, musicLoop, death;
     [SerializeField] private Walls wallsPrefab;
     [SerializeField] public Players playersPrefab;
     [SerializeField] public InputText diggerInputText, diggurInputText;
@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EndLose() {
+        FindObjectOfType<SoundManager>().Play(death, Players.transform.position);
         Destroy(Players.gameObject);
 
         if (Minigame)
@@ -126,6 +127,9 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Restart() {
+        foreach (var mole in FindObjectsOfType<Mole>())
+            Destroy(mole.gameObject);
+
         Floor.transform.position = Vector3.zero;
         Floor.Depth = 0;
         Ceiling.transform.position = new Vector3(0.5f, 12, 0);

@@ -43,4 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed579c3060b9941449e8644aeba20f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rockPrefab: {fileID: 8703261817910889423, guid: 3f31fae5891d9f44d8030f815199971c, type: 3}
+  rockPrefab: {fileID: 2474512235465795792, guid: 3f31fae5891d9f44d8030f815199971c, type: 3}
+  inputDelay: 0.5
+  hitClips:
+  - {fileID: 8300000, guid: a7d3b6b83edce914ebc1877d82341854, type: 3}
+  - {fileID: 8300000, guid: f5c3b8f5eb95bce4bbe503ca86aa8f33, type: 3}
+  - {fileID: 8300000, guid: 7f7f7eb4428ad9942aded8793b7a5116, type: 3}
+  breakClips:
+  - {fileID: 8300000, guid: 134bd98d6ee523844b448337a614de01, type: 3}
+  - {fileID: 8300000, guid: 7ed0814589a11b94a96353f3a166398b, type: 3}

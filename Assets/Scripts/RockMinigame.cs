@@ -1,14 +1,13 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class RockMinigame : Minigame {
-    [SerializeField] private GameObject rockPrefab;
+    [SerializeField] private AudioSource rockPrefab;
     [SerializeField] private float inputDelay = 0.5f;
+    [SerializeField] private AudioClip[] hitClips, breakClips;
 
     private GameManager manager;
 
-    private GameObject rock;
+    private AudioSource rock;
     private Vector3 rockTargetPosition;
 
     public override string Description => "Hit it at the same time!";
@@ -49,8 +48,13 @@ public class RockMinigame : Minigame {
             manager.Players.SwingDigger();
             manager.Players.SwingDiggur();
 
-            if (hitsLeft <= 0)
+            rock.clip = hitClips[Random.Range(0, hitClips.Length)];
+            rock.Play();
+
+            if (hitsLeft <= 0) {
                 manager.EndMinigame(true);
+                FindObjectOfType<SoundManager>().Play(breakClips[Random.Range(0, breakClips.Length)], rock.transform.position);
+            }
         }
 
         if (DiggerButton == null && diggerCorrect <= 0)
@@ -80,7 +84,7 @@ public class RockMinigame : Minigame {
     }
 
     private void OnDestroy() {
-        Destroy(rock);
+        Destroy(rock.gameObject);
         manager.Players.onInput.RemoveListener(InputListener);
     }
 }
