@@ -24,7 +24,7 @@ public class Mole : MonoBehaviour {
     private void OnCollisionEnter(Collision other) {
         var players = other.gameObject.GetComponent<Players>();
         if (players) {
-            players.Stun(1000);
+            FindObjectOfType<GameManager>().EndMinigame(false);
             Die();
         }
     }
@@ -32,6 +32,10 @@ public class Mole : MonoBehaviour {
     public void Die() {
         Alive = false;
         Destroy(inputText.gameObject);
-        Destroy(gameObject);
+        GetComponent<Rigidbody>().velocity = new Vector3(
+            Random.Range(-10f, 10f),
+            Random.Range(0f, 10f),
+            -50f
+        );
     }
 }

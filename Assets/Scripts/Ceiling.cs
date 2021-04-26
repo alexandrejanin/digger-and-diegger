@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class Ceiling : MonoBehaviour {
     [SerializeField, Min(0)] private float speed = 1;
-    [SerializeField, Min(0)] private float minDistance = 4;
-    [SerializeField, Min(0)] private float maxSeconds = 4;
+    [SerializeField, Min(0)] private float maxDistance = 4;
     [SerializeField, Min(0)] private float speedPerScore = 0.02f;
 
     private float Speed => speed + manager.Score * speedPerScore;
 
-    public float MinDistance => minDistance;
-    public float MaxDistance => minDistance + maxSeconds * Speed;
+    public float MaxDistance => maxDistance;
 
     private GameManager manager;
 
@@ -23,13 +21,13 @@ public class Ceiling : MonoBehaviour {
 
         var diff = Time.deltaTime * Speed * Vector3.down;
 
-        if (!manager.InDigPhase)
+        if (manager.InMinigame)
             diff /= 2;
 
         transform.position += diff;
 
-        if (Mathf.Abs(transform.position.y - manager.Players.transform.position.y) > MaxDistance)
-            transform.position = new Vector3(transform.position.x, manager.Players.transform.position.y + MaxDistance, transform.position.z);
+        if (Mathf.Abs(transform.position.y - manager.Players.transform.position.y) > maxDistance)
+            transform.position = new Vector3(transform.position.x, manager.Players.transform.position.y + maxDistance, transform.position.z);
     }
 
     private void OnCollisionEnter(Collision other) {

@@ -69,7 +69,7 @@ public class RockMinigame : Minigame {
                 diggerCorrect = inputDelay;
                 diggerButton = null;
             } else
-                manager.Players.Stun();
+                manager.Players.Stun(2);
         } else {
             if (button == DiggurButton) {
                 diggurCorrect = inputDelay;

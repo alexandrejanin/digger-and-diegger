@@ -13,7 +13,7 @@ public class MainCamera : MonoBehaviour {
 
         var ceilingDistance = manager.Ceiling.transform.position.y - manager.Players.transform.position.y;
 
-        var ceilingDistanceNormalized = Mathf.InverseLerp(manager.Ceiling.MaxDistance, manager.Ceiling.MinDistance, ceilingDistance);
+        var ceilingDistanceNormalized = Mathf.InverseLerp(manager.Ceiling.MaxDistance, 4, ceilingDistance);
 
         var yOffset = Mathf.Max(2, ceilingDistance / 2);
         var z = Mathf.Lerp(-30, -10, ceilingDistanceNormalized);

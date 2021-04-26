@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
-public class ScoreText : MonoBehaviour {
+public class HighScoreText : MonoBehaviour {
     [SerializeField] private bool hideOutOfGame = true;
     private Text text;
     private GameManager manager;

@@ -6,6 +6,9 @@ public class Rumble : MonoBehaviour {
     private Vector3 offset;
 
     private void Update() {
+        if (Time.timeScale < 0.01f)
+            return;
+
         transform.position -= offset;
 
         offset = Random.insideUnitSphere * amplitude;

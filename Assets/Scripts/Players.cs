@@ -27,7 +27,7 @@ public class Players : MonoBehaviour {
             if (isDigger == diggerNext && button == ButtonType.Down)
                 DigDown();
             else
-                Stun(2);
+                Stun(1 + manager.Score / 100f);
         });
     }
 
