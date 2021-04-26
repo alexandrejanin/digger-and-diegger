@@ -3,7 +3,7 @@ using UnityEngine;
 public class Mole : MonoBehaviour {
     [SerializeField] private InputText inputTextPrefab;
 
-    public bool isDigger;
+    [HideInInspector] public bool isDigger;
     public ButtonType Button { get; private set; }
 
     public bool Alive { get; private set; } = true;
@@ -16,8 +16,8 @@ public class Mole : MonoBehaviour {
 
     private void Start() {
         inputText = Instantiate(inputTextPrefab, FindObjectOfType<Canvas>().transform);
-        inputText.isDigger = isDigger;
         inputText.target = gameObject;
+        inputText.worldOffset = isDigger ? Vector3.left : Vector3.right;
         inputText.Prompt(Button);
     }
 

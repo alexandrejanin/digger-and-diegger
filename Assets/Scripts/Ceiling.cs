@@ -4,9 +4,12 @@ public class Ceiling : MonoBehaviour {
     [SerializeField, Min(0)] private float speed = 1;
     [SerializeField, Min(0)] private float minDistance = 4;
     [SerializeField, Min(0)] private float maxSeconds = 4;
+    [SerializeField, Min(0)] private float speedPerScore = 0.02f;
+
+    private float Speed => speed + manager.Score * speedPerScore;
 
     public float MinDistance => minDistance;
-    public float MaxDistance => minDistance + maxSeconds * speed;
+    public float MaxDistance => minDistance + maxSeconds * Speed;
 
     private GameManager manager;
 
@@ -18,7 +21,7 @@ public class Ceiling : MonoBehaviour {
         if (!manager.IsPlaying)
             return;
 
-        var diff = Time.deltaTime * speed * Vector3.down;
+        var diff = Time.deltaTime * Speed * Vector3.down;
 
         if (!manager.InDigPhase)
             diff /= 2;

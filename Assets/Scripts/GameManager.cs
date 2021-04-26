@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
     [SerializeField] public Players playersPrefab;
     [SerializeField] public InputText diggerInputText, diggurInputText;
-    [SerializeField] private GameObject mainMenu, pauseMenu, defeatMenu;
+    [SerializeField] private GameObject mainMenu, optionsMenu, pauseMenu, defeatMenu;
     [SerializeField, Min(0)] private float minMinigameDelay = 3, maxMinigameDelay = 10;
     [SerializeField] private Minigame[] minigames;
 
@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
     public Players Players { get; private set; }
     public Floor Floor { get; private set; }
     public Ceiling Ceiling { get; private set; }
+
+    public int Score => Mathf.FloorToInt(Floor.transform.position.y);
 
     public Minigame Minigame { get; private set; }
     public bool InMinigame => IsPlaying && Minigame != null;
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape))
             Pause();
 
+        Time.timeScale = pauseMenu.activeInHierarchy ? 0 : 1;
+
         if (!IsPlaying)
             return;
 
@@ -38,7 +42,10 @@ public class GameManager : MonoBehaviour {
         if (InDigPhase && minigameDelay < 0)
             SpawnMinigame();
 
-        if (Minigame != null) {
+        if (Players.IsStunned) {
+            diggerInputText.Prompt(null);
+            diggurInputText.Prompt(null);
+        } else if (Minigame != null) {
             diggerInputText.Prompt(Minigame.DiggerButton);
             diggurInputText.Prompt(Minigame.DiggurButton);
         } else {
@@ -86,5 +93,14 @@ public class GameManager : MonoBehaviour {
 
     public void Restart() {
         SceneManager.LoadScene(0);
+    }
+
+    public void Quit() {
+        Application.Quit();
+    }
+
+    public void ToggleOptions() {
+        mainMenu.SetActive(!mainMenu.activeSelf);
+        optionsMenu.SetActive(!optionsMenu.activeSelf);
     }
 }
