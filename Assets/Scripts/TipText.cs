@@ -12,6 +12,9 @@ public class TipText : MonoBehaviour {
     }
 
     private void Update() {
-        text.text = manager.Minigame?.Description;
+        text.enabled = manager.IsPlaying;
+        text.text = manager.Minigame
+            ? manager.Minigame.Description
+            : "Dig one at a time!";
     }
 }

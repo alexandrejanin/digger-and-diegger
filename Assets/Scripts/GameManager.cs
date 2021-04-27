@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         Floor = FindObjectOfType<Floor>(true);
         Ceiling = FindObjectOfType<Ceiling>(true);
-        minigameDelay = Random.Range(3f, 6f);
     }
 
     private void Update() {
@@ -94,9 +93,12 @@ public class GameManager : MonoBehaviour {
         Players = Instantiate(playersPrefab, new Vector3(0, 15, 0), Quaternion.identity);
         diggerInputText.target = Players.transform.Find("Digger").gameObject;
         diggurInputText.target = Players.transform.Find("Diggur").gameObject;
+
+        minigameDelay = Random.Range(3f, 6f);
     }
 
     public void PlayersLanded() {
+        Floor.GetComponentInChildren<ParticleSystem>().Play();
         Ceiling.gameObject.SetActive(true);
         IsPlaying = true;
     }
@@ -116,6 +118,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EndLose() {
+        Floor.Depth += 0.01f;
         FindObjectOfType<SoundManager>().Play(death, Players.transform.position);
         Destroy(Players.gameObject);
 
@@ -123,6 +126,14 @@ public class GameManager : MonoBehaviour {
             Destroy(Minigame.gameObject);
 
         Minigame = null;
+
+        var highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (Score > highScore)
+            PlayerPrefs.SetInt("HighScore", Score);
+
+        foreach (var text in FindObjectsOfType<HighScoreText>())
+            text.UpdateDisplay();
+
         defeatMenu.SetActive(true);
     }
 

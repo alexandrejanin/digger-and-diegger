@@ -10,6 +10,7 @@ public class HighScoreText : MonoBehaviour {
     private void Awake() {
         text = GetComponent<Text>();
         manager = FindObjectOfType<GameManager>();
+        UpdateDisplay();
     }
 
     private void Update() {
@@ -17,7 +18,9 @@ public class HighScoreText : MonoBehaviour {
             transform.parent.GetComponent<Image>().enabled = manager.IsPlaying;
         if (hideOutOfGame)
             text.enabled = manager.IsPlaying;
+    }
 
-        text.text = $"-{manager.Score}m";
+    public void UpdateDisplay() {
+        text.text = $"Your deepest:\n-{PlayerPrefs.GetInt("HighScore", 0)}m";
     }
 }

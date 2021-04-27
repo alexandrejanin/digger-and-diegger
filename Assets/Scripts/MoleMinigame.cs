@@ -95,7 +95,8 @@ public class MoleMinigame : Minigame {
     }
 
     private void OnDestroy() {
-        Destroy(line);
+        if (line)
+            Destroy(line);
         manager.Players.onInput.RemoveListener(InputListener);
     }
 }

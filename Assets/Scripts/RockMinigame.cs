@@ -51,6 +51,9 @@ public class RockMinigame : Minigame {
             rock.clip = hitClips[Random.Range(0, hitClips.Length)];
             rock.Play();
 
+            foreach (var p in rock.GetComponentsInChildren<ParticleSystem>())
+                p.Play();
+
             if (hitsLeft <= 0) {
                 manager.EndMinigame(true);
                 FindObjectOfType<SoundManager>().Play(breakClips[Random.Range(0, breakClips.Length)], rock.transform.position);
@@ -84,7 +87,8 @@ public class RockMinigame : Minigame {
     }
 
     private void OnDestroy() {
-        Destroy(rock.gameObject);
+        if (rock)
+            Destroy(rock.gameObject);
         manager.Players.onInput.RemoveListener(InputListener);
     }
 }

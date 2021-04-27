@@ -41,6 +41,7 @@ public class Mole : MonoBehaviour {
     public void Die() {
         Alive = false;
         Destroy(inputText.gameObject);
+        GetComponentInChildren<ParticleSystem>().Play();
         GetComponent<Rigidbody>().velocity = new Vector3(
             Random.Range(-10f, 10f),
             Random.Range(5f, 10f),

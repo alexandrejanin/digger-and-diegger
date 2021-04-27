@@ -3,13 +3,19 @@ using UnityEngine;
 public class Floor : MonoBehaviour {
     private Vector3 targetPosition;
 
+    private ParticleSystem dust;
+
     public float Depth {
         get => targetPosition.y;
-        set => targetPosition.y = value;
+        set {
+            targetPosition.y = value;
+            dust.Play();
+        }
     }
 
     private void Awake() {
         targetPosition = transform.position;
+        dust = GetComponentInChildren<ParticleSystem>();
     }
 
     private void Update() {
